@@ -3,6 +3,7 @@
 namespace ReactInspector\Collector\Merger;
 
 use function ApiClients\Tools\Rx\observableFromArray;
+use function ApiClients\Tools\Rx\unwrapObservableFromPromise;
 use function React\Promise\all;
 use ReactInspector\CollectorInterface;
 use ReactInspector\Measurement;
@@ -38,7 +39,7 @@ final class CollectorMergerCollector implements CollectorInterface
             $promises[] = $collector->collect()->toArray()->toPromise();
         }
 
-        return Observable::fromPromise(
+        return unwrapObservableFromPromise(
             all($promises)->then(function (array $metricCollections) {
                 $metrics = [];
 

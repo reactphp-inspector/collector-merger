@@ -10,7 +10,6 @@ use ReactInspector\Measurement;
 use ReactInspector\Metric;
 use ReactInspector\Tag;
 use ReactInspector\Tags;
-use Rx\React\Promise;
 use WyriHaximus\AsyncTestUtilities\AsyncTestCase;
 
 /**
@@ -66,10 +65,10 @@ final class CollectorMergerCollectorTest extends AsyncTestCase
             ]
         );
         /** @var Metric $metric */
-        $metric = $this->await(Promise::fromObservable($this->await((new CollectorMergerCollector(
+        $metric = $this->await((new CollectorMergerCollector(
             new CollectorStubSame(observableFromArray([$metricA])),
             new CollectorStubSame(observableFromArray([$metricC]))
-        ))->collect()->take(1)->toArray()->toPromise())[0]));
+        ))->collect()->take(1)->toArray()->toPromise())[0];
 
         self::assertCount(0, $metric->tags());
         self::assertCount(2, $metric->measurements());
