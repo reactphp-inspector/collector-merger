@@ -55,17 +55,17 @@ final class CollectorMergerCollector implements CollectorInterface
                         $measurements = [];
 
                         /** @var Measurement $measurement */
-                        foreach ($metric->measurements() as $measurement) {
+                        foreach ($metric->measurements()->get() as $measurement) {
                             $measurements[] = new Measurement(
                                 $measurement->value(),
-                                new Tags(...\array_merge($metric->tags(), $measurement->tags()))
+                                new Tags(...\array_values(\array_merge($metric->tags()->get(), $measurement->tags()->get())))
                             );
                         }
 
                         $metrics[$metric->config()->name()] = new Metric(
                             $metric->config(),
                             new Tags(),
-                            new Measurements(...\array_merge($metrics[$metric->config()->name()]->measurements(), $measurements))
+                            new Measurements(...\array_merge($metrics[$metric->config()->name()]->measurements()->get(), $measurements))
                         );
                     }
                 }
