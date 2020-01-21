@@ -2,6 +2,8 @@
 
 namespace ReactInspector\Collector\Merger;
 
+use ReactInspector\Measurements;
+use ReactInspector\Tags;
 use function ApiClients\Tools\Rx\observableFromArray;
 use function ApiClients\Tools\Rx\unwrapObservableFromPromise;
 use function React\Promise\all;
@@ -47,7 +49,7 @@ final class CollectorMergerCollector implements CollectorInterface
                     /** @var Metric $metric */
                     foreach ($metricCollection as $metric) {
                         if (!\array_key_exists($metric->config()->name(), $metrics)) {
-                            $metrics[$metric->config()->name()] = new Metric($metric->config(), [], []);
+                            $metrics[$metric->config()->name()] = new Metric($metric->config(), new Tags(), new Measurements());
                         }
 
                         $measurements = [];
@@ -56,14 +58,14 @@ final class CollectorMergerCollector implements CollectorInterface
                         foreach ($metric->measurements() as $measurement) {
                             $measurements[] = new Measurement(
                                 $measurement->value(),
-                                ...\array_merge($metric->tags(), $measurement->tags())
+                                new Tags(...\array_merge($metric->tags(), $measurement->tags()))
                             );
                         }
 
                         $metrics[$metric->config()->name()] = new Metric(
                             $metric->config(),
-                            [],
-                            \array_merge($metrics[$metric->config()->name()]->measurements(), $measurements)
+                            new Tags(),
+                            new Measurements(...\array_merge($metrics[$metric->config()->name()]->measurements(), $measurements))
                         );
                     }
                 }
