@@ -2,9 +2,9 @@
 
 namespace ReactInspector\Tests\Collector\Merger;
 
-use function ApiClients\Tools\Rx\observableFromArray;
 use ReactInspector\CollectorInterface;
 use Rx\Observable;
+use function ApiClients\Tools\Rx\observableFromArray;
 
 /**
  * @internal

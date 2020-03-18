@@ -1,11 +1,11 @@
-# Merge identical metrics of the same name and type
+# Merge identical collector-merger of the same name and type
 
-[![Linux Build Status](https://travis-ci.com/reactphp-inspector/collector-merger.png)](https://travis-ci.com/reactphp-inspector/collector-merger)
+![Continuous Integration](https://github.com/reactphp-inspector/collector-merger/workflows/Continuous%20Integration/badge.svg)
 [![Latest Stable Version](https://poser.pugx.org/react-inspector/collector-merger/v/stable.png)](https://packagist.org/packages/react-inspector/collector-merger)
-[![Total Downloads](https://poser.pugx.org/react-inspector/collector-merger/downloads.png)](https://packagist.org/packages/react-inspector/collector-merger)
+[![Total Downloads](https://poser.pugx.org/react-inspector/collector-merger/downloads.png)](https://packagist.org/packages/react-inspector/collector-merger/stats)
 [![Code Coverage](https://scrutinizer-ci.com/g/reactphp-inspector/collector-merger/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/reactphp-inspector/collector-merger/?branch=master)
+[![Type Coverage](https://shepherd.dev/github/reactphp-inspector/collector-merger/coverage.svg)](https://shepherd.dev/github/reactphp-inspector/collector-merger)
 [![License](https://poser.pugx.org/react-inspector/collector-merger/license.png)](https://packagist.org/packages/react-inspector/collector-merger)
-[![PHP 7 ready](http://php7ready.timesplinter.ch/reactphp-inspector/collector-merger/badge.svg)](https://travis-ci.com/reactphp-inspector/collector-merger)
 
 ### Installation ###
 

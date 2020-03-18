@@ -2,15 +2,18 @@
 
 namespace ReactInspector\Tests\Collector\Merger;
 
-use function ApiClients\Tools\Rx\observableFromArray;
 use ReactInspector\Collector\Merger\CollectorMergerCollector;
 use ReactInspector\Collector\Merger\CollectorsMustBeOfTheSameClassException;
 use ReactInspector\Config;
 use ReactInspector\Measurement;
+use ReactInspector\Measurements;
 use ReactInspector\Metric;
 use ReactInspector\Tag;
 use ReactInspector\Tags;
 use WyriHaximus\AsyncTestUtilities\AsyncTestCase;
+use function ApiClients\Tools\Rx\observableFromArray;
+use function array_values;
+use function assert;
 
 /**
  * @internal
@@ -32,7 +35,7 @@ final class CollectorMergerCollectorTest extends AsyncTestCase
             new CollectorStubSame(observableFromArray([])),
             new CollectorStubSame(observableFromArray([])),
             new CollectorStubSame(observableFromArray([])),
-            new CollectorStubDifferent()
+            new CollectorStubDifferent(),
         );
     }
 
@@ -41,48 +44,47 @@ final class CollectorMergerCollectorTest extends AsyncTestCase
      */
     public function mergesMetrics(): void
     {
-        $config = new Config(
+        $config  = new Config(
             'name',
             'counter',
             'Halp'
         );
-        $metricA = new Metric(
+        $metricA = Metric::create(
             $config,
-            [
+            new Tags(
                 new Tag('a', 'b'),
-            ],
-            [
-                new Measurement(123.456, new Tag('zz', 'xx')),
-            ]
+            ),
+            new Measurements(
+                new Measurement(123.456, new Tags(new Tag('zz', 'xx'))),
+            )
         );
-        $metricC = new Metric(
+        $metricC = Metric::create(
             $config,
-            [
+            new Tags(
                 new Tag('c', 'd'),
-            ],
-            [
-                new Measurement(789.101112, new Tag('vv', 'ww')),
-            ]
+            ),
+            new Measurements(
+                new Measurement(789.101112, new Tags(new Tag('vv', 'ww'))),
+            )
         );
-        /** @var Metric $metric */
-        $metric = $this->await((new CollectorMergerCollector(
+        $metric  = $this->await((new CollectorMergerCollector(
             new CollectorStubSame(observableFromArray([$metricA])),
             new CollectorStubSame(observableFromArray([$metricC]))
         ))->collect()->take(1)->toArray()->toPromise())[0];
+        assert($metric instanceof Metric);
 
-        self::assertCount(0, $metric->tags());
-        self::assertCount(2, $metric->measurements());
+        self::assertCount(0, $metric->tags()->get());
+        self::assertCount(2, $metric->measurements()->get());
 
-        /** @var Measurement $measurement */
-        foreach ($metric->measurements() as $measurement) {
+        foreach ($metric->measurements()->get() as $measurement) {
             self::assertTrue(
                 (
                     $measurement->value() === 123.456 &&
-                    (string)new Tags(...$measurement->tags()) === 'a=b,zz=xx'
+                    (string) new Tags(...array_values($measurement->tags()->get())) === 'a=b,zz=xx'
                 ) ||
                 (
                     $measurement->value() === 789.101112 &&
-                    (string)new Tags(...$measurement->tags()) === 'c=d,vv=ww'
+                    (string) new Tags(...array_values($measurement->tags()->get())) === 'c=d,vv=ww'
                 )
             );
         }

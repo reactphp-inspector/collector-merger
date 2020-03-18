@@ -5,13 +5,10 @@ namespace ReactInspector\Tests\Collector\Merger;
 use ReactInspector\CollectorInterface;
 use Rx\Observable;
 
-/**
- * @internal
- */
+/** @internal */
 final class CollectorStubSame implements CollectorInterface
 {
-    /** @var Observable */
-    private $observable;
+    private Observable $observable;
 
     public function __construct(Observable $observable)
     {
